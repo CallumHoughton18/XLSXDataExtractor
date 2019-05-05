@@ -26,13 +26,20 @@ namespace XLSXDataExtractorTests
         {
             DataExtractor dataExtractor = new DataExtractor(Path.Combine(executingAssemblyPath, "Files", "IntegrationTestExample.xlsx"));
 
-            var extractionRequests = new List<ExtractionRequest>() { new ExtractionRequest("SalesRep", 2, 3), new ExtractionRequest("SalesRepID", 3, 2) };
-
+            var extractionRequests = new List<ExtractionRequest>() { new ExtractionRequest("SalesRep", 2, 3), new ExtractionRequest("SalesRepID", 2, 2) };
             var extracted = dataExtractor.RetrieveDataFromAllWorksheetsInWorkbook<object>(extractionRequests);
 
-            XLWorkbook workbook = new XLWorkbook();
-            workbook.AddWorksheet(ExtractedDataConverter.ConvertToWorksheet(extracted));
-            workbook.SaveAs(Path.Combine(executingAssemblyPath, "IntegrationTest.xlsx"));
+            var generatedWorksheet = ExtractedDataConverter.ConvertToWorksheet(extracted);
+
+            Assert.That(generatedWorksheet.Cell(1, 1).Value.ToString(), Is.EqualTo("SalesRep"));
+            Assert.That(generatedWorksheet.Cell(2, 1).Value.ToString(), Is.EqualTo("Jane"));
+            Assert.That(generatedWorksheet.Cell(3, 1).Value.ToString(), Is.EqualTo("Ashish"));
+            Assert.That(generatedWorksheet.Cell(4, 1).Value.ToString(), Is.EqualTo("John"));
+
+            Assert.That(generatedWorksheet.Cell(1, 2).Value.ToString(), Is.EqualTo("SalesRepID"));
+            Assert.That(generatedWorksheet.Cell(2, 2).Value.ToString(), Is.EqualTo("456"));
+            Assert.That(generatedWorksheet.Cell(3, 2).Value.ToString(), Is.EqualTo("789"));
+            Assert.That(generatedWorksheet.Cell(4, 2).Value.ToString(), Is.EqualTo("123"));
         }
     }
 }
