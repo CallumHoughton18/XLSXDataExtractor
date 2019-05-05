@@ -5,7 +5,7 @@ using XLSXDataExtractor;
 
 namespace XLSXDataExtractorTests
 {
-    public class DataExtractorTests
+    public class DataExtractorUnitTests
     {
         string executingAssemblyPath;
 
@@ -29,6 +29,16 @@ namespace XLSXDataExtractorTests
 
             DataExtractor sut;
             var ex = Assert.Throws<FileNotFoundException>(() => sut = new DataExtractor(workbookPath));
+        }
+
+        [Test]
+        public void InitializationInvalidFile()
+        {
+            var workbookPath = Path.Combine(executingAssemblyPath, "Files", "expectedCSV.txt");
+
+            DataExtractor sut;
+            var ex = Assert.Throws<ArgumentException>(() => sut = new DataExtractor(workbookPath));
+            StringAssert.Contains("Extension 'txt' is not supported. Supported extensions are '.xlsx', '.xslm', '.xltx' and '.xltm'.", ex.Message);
         }
 
         [Test]

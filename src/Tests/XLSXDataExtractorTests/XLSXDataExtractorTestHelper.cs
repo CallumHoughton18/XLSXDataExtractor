@@ -27,5 +27,24 @@ namespace XLSXDataExtractorTests
                 yield return col;
             }
         }
+
+        public static IEnumerable<IEnumerable<ExtractedData<object>>> GenTwoDimensionalCollectionOfExtractedDataWithNullFieldNames()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                List<ExtractedData<object>> col = new List<ExtractedData<object>>();
+
+                for (int j = 0; j < 10; j++)
+                {
+                    if (j != 5)
+                        col.Add(new ExtractedData<object>("Test" + j, j));
+
+                    else
+                        col.Add(new ExtractedData<object>(null, null));
+                }
+
+                yield return col;
+            }
+        }
     }
 }

@@ -11,41 +11,56 @@ using XLSXDataExtractor.Models;
 
 namespace XLSXDataExtractor
 {
-    public class ExtractedDataConverter
+    public static class ExtractedDataConverter
     {
-        public void ConvertToNewXLSX(IEnumerable<IEnumerable<ExtractedData<object>>> TwoDiColOfExtractedData, string pathToSaveTo)
+        public static IXLWorksheet ConvertToWorksheet(IEnumerable<IEnumerable<ExtractedData<object>>> TwoDiColOfExtractedData)
         {
-            var genDataTable = GenerateDataTable(TwoDiColOfExtractedData);
+            if (TwoDiColOfExtractedData == null) throw new ArgumentNullException("TwoDiColOfExtractedData", "Cannot be null");
 
+            string sheetName = "newsheet";
+            var genDataTable = GenerateDataTable(TwoDiColOfExtractedData);
             var xlWorkbook = new XLWorkbook();
-            xlWorkbook.AddWorksheet(genDataTable, (xlWorkbook.Worksheets.Count + 1).ToString());
-            xlWorkbook.SaveAs(pathToSaveTo);
+            xlWorkbook.AddWorksheet(genDataTable, sheetName);
+            return xlWorkbook.Worksheet(sheetName);
         }
 
-        public void ConvertToCSV(IEnumerable<IEnumerable<ExtractedData<object>>> TwoDiColOfExtractedData, string pathToSaveTo)
+        public static string ConvertToCSV(IEnumerable<IEnumerable<ExtractedData<object>>> TwoDiColOfExtractedData)
         {
+            if (TwoDiColOfExtractedData == null) throw new ArgumentNullException("TwoDiColOfExtractedData", "Cannot be null");
+
             var genDataTable = GenerateDataTable(TwoDiColOfExtractedData);
 
             string csvText = genDataTable.ToCSVString();
-
-            File.WriteAllText(pathToSaveTo, csvText);
+            return csvText;
         }
 
-        private DataTable GenerateDataTable(IEnumerable<IEnumerable<ExtractedData<object>>> TwoDiColOfExtractedData)
+        private static DataTable GenerateDataTable(IEnumerable<IEnumerable<ExtractedData<object>>> TwoDiColOfExtractedData)
         {
             var dataTable = new DataTable();
 
             var dataTableHeaders = TwoDiColOfExtractedData.SelectMany(x => x.Select(y => y.FieldName)).Distinct().Select(x => new DataColumn(x));
             dataTable.Columns.AddRange(dataTableHeaders.ToArray());
 
+            int i = 0;
             foreach (var extractedDataCollection in TwoDiColOfExtractedData)
             {
                 var currentRow = dataTable.NewRow();
 
+
+                int j = 0;
                 foreach (var extractedData in extractedDataCollection)
                 {
-                    currentRow[extractedData.FieldName] = extractedData.FieldValue;
+                    try
+                    {
+                        currentRow[extractedData.FieldName] = extractedData.FieldValue;
+                    }
+                    catch (ArgumentNullException e)
+                    {
+                        throw new ArgumentNullException("extractedData", $"An ExtractedData object at position {i},{j} has a null field name, null field names cannot be added.");
+                    }
+                    j++;
                 }
+                i++;
 
                 dataTable.Rows.Add(currentRow);
             }
