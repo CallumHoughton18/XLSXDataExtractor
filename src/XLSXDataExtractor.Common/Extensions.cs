@@ -35,7 +35,7 @@ namespace XLSXDataExtractor.Common
                 stringBuilder.Replace(",", Environment.NewLine, stringBuilder.Length - 1, 1);
             }
 
-            return stringBuilder.ToString();
+            return stringBuilder.ToString().TrimEnd(Environment.NewLine.ToCharArray());
         }
     }
 }

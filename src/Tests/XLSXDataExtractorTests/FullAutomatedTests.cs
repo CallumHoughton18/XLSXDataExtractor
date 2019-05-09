@@ -22,7 +22,7 @@ namespace XLSXDataExtractorTests
         }
 
         [Test]
-        public void ValidIntegrationTest()
+        public void ValidWorksheetGenerationIntegrationTest()
         {
             DataExtractor dataExtractor = new DataExtractor(Path.Combine(executingAssemblyPath, "Files", "IntegrationTestExample.xlsx"));
 
@@ -40,6 +40,18 @@ namespace XLSXDataExtractorTests
             Assert.That(generatedWorksheet.Cell(2, 2).Value.ToString(), Is.EqualTo("456"));
             Assert.That(generatedWorksheet.Cell(3, 2).Value.ToString(), Is.EqualTo("789"));
             Assert.That(generatedWorksheet.Cell(4, 2).Value.ToString(), Is.EqualTo("123"));
+        }
+
+        [Test]
+        public void ValidCSVGenerationIntegrationTest()
+        {
+            DataExtractor dataExtractor = new DataExtractor(Path.Combine(executingAssemblyPath, "Files", "IntegrationTestExample.xlsx"));
+
+            var extractionRequests = new List<ExtractionRequest>() { new ExtractionRequest("SalesRep", 2, 3), new ExtractionRequest("SalesRepID", 2, 2) };
+            var extracted = dataExtractor.RetrieveDataCollectionFromAllWorksheets<object>(extractionRequests);
+
+            var generatedCSVText = ExtractedDataConverter.ConvertToCSV(extracted);
+            Assert.That(generatedCSVText, Is.EqualTo(File.ReadAllText(Path.Combine(executingAssemblyPath, "Files", "IntegrationTestExpectedCsv.txt"))));
         }
     }
 }
