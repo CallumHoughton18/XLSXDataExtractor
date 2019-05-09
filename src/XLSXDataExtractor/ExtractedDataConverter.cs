@@ -13,7 +13,7 @@ namespace XLSXDataExtractor
 {
     public static class ExtractedDataConverter
     {
-        public static IXLWorksheet ConvertToWorksheet(IEnumerable<IEnumerable<ExtractedData<object>>> TwoDiColOfExtractedData)
+        public static IXLWorksheet ConvertToWorksheet(IEnumerable<IEnumerable<KeyValuePair<string, object>>> TwoDiColOfExtractedData)
         {
             if (TwoDiColOfExtractedData == null) throw new ArgumentNullException("TwoDiColOfExtractedData", "Cannot be null");
 
@@ -24,7 +24,7 @@ namespace XLSXDataExtractor
             return xlWorkbook.Worksheet(sheetName);
         }
 
-        public static string ConvertToCSV(IEnumerable<IEnumerable<ExtractedData<object>>> TwoDiColOfExtractedData)
+        public static string ConvertToCSV(IEnumerable<IEnumerable<KeyValuePair<string, object>>> TwoDiColOfExtractedData)
         {
             if (TwoDiColOfExtractedData == null) throw new ArgumentNullException("TwoDiColOfExtractedData", "Cannot be null");
 
@@ -34,11 +34,11 @@ namespace XLSXDataExtractor
             return csvText;
         }
 
-        private static DataTable GenerateDataTable(IEnumerable<IEnumerable<ExtractedData<object>>> TwoDiColOfExtractedData)
+        private static DataTable GenerateDataTable(IEnumerable<IEnumerable<KeyValuePair<string, object>>> TwoDiColOfExtractedData)
         {
             var dataTable = new DataTable();
 
-            var dataTableHeaders = TwoDiColOfExtractedData.SelectMany(x => x.Select(y => y.FieldName)).Distinct().Select(x => new DataColumn(x));
+            var dataTableHeaders = TwoDiColOfExtractedData.SelectMany(x => x.Select(y => y.Key)).Distinct().Select(x => new DataColumn(x));
             dataTable.Columns.AddRange(dataTableHeaders.ToArray());
 
             int i = 0;
@@ -52,7 +52,7 @@ namespace XLSXDataExtractor
                 {
                     try
                     {
-                        currentRow[extractedData.FieldName] = extractedData.FieldValue;
+                        currentRow[extractedData.Key] = extractedData.Value;
                     }
                     catch (ArgumentNullException e)
                     {

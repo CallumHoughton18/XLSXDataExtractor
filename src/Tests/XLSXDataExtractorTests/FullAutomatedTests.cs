@@ -27,7 +27,7 @@ namespace XLSXDataExtractorTests
             DataExtractor dataExtractor = new DataExtractor(Path.Combine(executingAssemblyPath, "Files", "IntegrationTestExample.xlsx"));
 
             var extractionRequests = new List<ExtractionRequest>() { new ExtractionRequest("SalesRep", 2, 3), new ExtractionRequest("SalesRepID", 2, 2) };
-            var extracted = dataExtractor.RetrieveDataFromAllWorksheetsInWorkbook<object>(extractionRequests);
+            var extracted = dataExtractor.RetrieveDataCollectionFromAllWorksheets<object>(extractionRequests);
 
             var generatedWorksheet = ExtractedDataConverter.ConvertToWorksheet(extracted);
 

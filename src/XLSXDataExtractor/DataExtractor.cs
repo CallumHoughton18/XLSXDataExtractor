@@ -26,11 +26,11 @@ namespace XLSXDataExtractor
             }
         }
 
-        public IEnumerable<IEnumerable<ExtractedData<fieldValueType>>> RetrieveDataFromAllWorksheetsInWorkbook<fieldValueType>(IEnumerable<ExtractionRequest> extractionRequests)
+        public IEnumerable<IEnumerable<KeyValuePair<string, fieldValueType>>> RetrieveDataCollectionFromAllWorksheets<fieldValueType>(IEnumerable<ExtractionRequest> extractionRequests)
         {
             foreach (var worksheet in RequiredWorkbook.Worksheets)
             {
-                var extractedDatas = new List<ExtractedData<fieldValueType>>();
+                var extractedDatas = new List<KeyValuePair<string, fieldValueType>>();
                 foreach (var extractionRequest in extractionRequests)
                 {
                     var extractedData = RetrieveDataFromWorkbook<fieldValueType>(worksheet.Name, extractionRequest.FieldName, extractionRequest.RowNum, extractionRequest.ColNum);
@@ -40,7 +40,25 @@ namespace XLSXDataExtractor
             }
         }
 
-        public ExtractedData<fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(string workSheetName, string extractedDataFieldName, int rowNum, int columnNum)
+        public IEnumerable<KeyValuePair<string, fieldValueType>> RetrieveDataCollectionFromSpecificWorksheet<fieldValueType>(string workSheetName, IEnumerable<ExtractionRequest> extractionRequests)
+        {
+            foreach (var extractionRequest in extractionRequests)
+            {
+                var extractedData = RetrieveDataFromWorkbook<fieldValueType>(workSheetName, extractionRequest);
+                yield return extractedData;
+            }
+        }
+
+        public IEnumerable<KeyValuePair<string, fieldValueType>> RetrieveDataCollectionFromSpecificWorksheet<fieldValueType>(int workSheetNum, IEnumerable<ExtractionRequest> extractionRequests)
+        {
+            foreach (var extractionRequest in extractionRequests)
+            {
+                var extractedData = RetrieveDataFromWorkbook<fieldValueType>(workSheetNum, extractionRequest);
+                yield return extractedData;
+            }
+        }
+
+        public KeyValuePair<string,fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(string workSheetName, string extractedDataFieldName, int rowNum, int columnNum)
         {
             if (string.IsNullOrWhiteSpace(extractedDataFieldName)) throw new ArgumentException("An extraction request fieldname cannot be null or empty");
 
@@ -52,12 +70,12 @@ namespace XLSXDataExtractor
 
         }
 
-        public ExtractedData<fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(string workSheetName, ExtractionRequest extractionRequest)
+        public KeyValuePair<string, fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(string workSheetName, ExtractionRequest extractionRequest)
         {
             return RetrieveDataFromWorkbook<fieldValueType>(workSheetName, extractionRequest.FieldName, extractionRequest.RowNum, extractionRequest.ColNum);
         }
 
-        public ExtractedData<fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(int workSheetNum, string extractedDataFieldName, int rowNum, int columnNum)
+        public KeyValuePair<string,fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(int workSheetNum, string extractedDataFieldName, int rowNum, int columnNum)
         {
             if (string.IsNullOrWhiteSpace(extractedDataFieldName)) throw new ArgumentException("An extraction request fieldname cannot be null or empty");
             if (!Enumerable.Range(1, RequiredWorkbook.Worksheets.Count).Contains(workSheetNum)) throw new ArgumentOutOfRangeException("workSheetNum", $"Not within range of worksheets. Worksheets count: {RequiredWorkbook.Worksheets.Count}");
@@ -67,15 +85,15 @@ namespace XLSXDataExtractor
 
         }
 
-        public ExtractedData<fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(int workSheetNum, ExtractionRequest extractionRequest)
+        public KeyValuePair<string, fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(int workSheetNum, ExtractionRequest extractionRequest)
         {
             return RetrieveDataFromWorkbook<fieldValueType>(workSheetNum, extractionRequest.FieldName, extractionRequest.RowNum, extractionRequest.ColNum);
         }
 
-        private ExtractedData<fieldValueType> GenerateExtractedData<fieldValueType>(IXLWorksheet worksheet, string extractedDataFieldName, int rowNum, int columnNum)
+        private KeyValuePair<string, fieldValueType> GenerateExtractedData<fieldValueType>(IXLWorksheet worksheet, string extractedDataFieldName, int rowNum, int columnNum)
         {
             var fieldValue = ExtractDataFromWorksheet<fieldValueType>(rowNum, columnNum, worksheet);
-            return new ExtractedData<fieldValueType>(extractedDataFieldName, fieldValue);
+            return new KeyValuePair<string, fieldValueType>(extractedDataFieldName, fieldValue);
         }
 
         private valueType ExtractDataFromWorksheet<valueType>(int rowNum, int columnNum, IXLWorksheet worksheet)

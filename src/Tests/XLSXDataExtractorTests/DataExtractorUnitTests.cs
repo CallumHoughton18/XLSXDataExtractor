@@ -49,8 +49,8 @@ namespace XLSXDataExtractorTests
 
             var extractedData = sut.RetrieveDataFromWorkbook<string>(1, "TestField", 1, 1);
 
-            Assert.That(extractedData.FieldName, Is.EqualTo("TestField"));
-            Assert.That(extractedData.FieldValue, Is.EqualTo("TestValue1"));
+            Assert.That(extractedData.Key, Is.EqualTo("TestField"));
+            Assert.That(extractedData.Value, Is.EqualTo("TestValue1"));
         }
 
         [Test]
@@ -81,8 +81,8 @@ namespace XLSXDataExtractorTests
 
             var extractedData = sut.RetrieveDataFromWorkbook<string>("Sheet1", "TestField", 1, 1);
 
-            Assert.That(extractedData.FieldName, Is.EqualTo("TestField"));
-            Assert.That(extractedData.FieldValue, Is.EqualTo("TestValue1"));
+            Assert.That(extractedData.Key, Is.EqualTo("TestField"));
+            Assert.That(extractedData.Value, Is.EqualTo("TestValue1"));
         }
 
         [Test]
@@ -93,8 +93,8 @@ namespace XLSXDataExtractorTests
 
             var extractedData = sut.RetrieveDataFromWorkbook<double>("Sheet3", "TestField", 1, 2);
 
-            Assert.That(extractedData.FieldName, Is.EqualTo("TestField"));
-            Assert.That(extractedData.FieldValue, Is.EqualTo(3.33D));
+            Assert.That(extractedData.Key, Is.EqualTo("TestField"));
+            Assert.That(extractedData.Value, Is.EqualTo(3.33D));
         }
 
         [Test]
@@ -116,8 +116,8 @@ namespace XLSXDataExtractorTests
             var sut = new DataExtractor(workbookPath);
 
             var extractedData = sut.RetrieveDataFromWorkbook<string>("Sheet1", "TestField", 1, 5);
-            Assert.That(extractedData.FieldName, Is.EqualTo("TestField"));
-            Assert.That(extractedData.FieldValue, Is.EqualTo(""));
+            Assert.That(extractedData.Key, Is.EqualTo("TestField"));
+            Assert.That(extractedData.Value, Is.EqualTo(""));
         }
 
         [Test]
