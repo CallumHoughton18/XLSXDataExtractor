@@ -1,2 +1,2 @@
 language: csharp
-solution: XLSXDataExtractor.sln
+solution: /src/XLSXDataExtractor.sln
