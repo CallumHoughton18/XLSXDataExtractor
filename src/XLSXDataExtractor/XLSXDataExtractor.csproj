@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Callum_Houghton</Authors>
+    <Description>An extension library for ClosedXML to allow for quick and easy bulk data extraction from Excel Workbooks into various formats.</Description>
+    <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageId>XLSX_Data_Extractor</PackageId>
+    <PackageProjectUrl>https://github.com/CallumHoughton18/XLSXDataExtractor</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/CallumHoughton18/XLSXDataExtractor</RepositoryUrl>
+    <PackageTags>ClosedXML DataExtraction XLSX OpenXML</PackageTags>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageIconUrl>https://raw.githubusercontent.com/CallumHoughton18/XLSXDataExtractor/master/Media/Icon64x64.png</PackageIconUrl>
+    <PackageLicenseExpression></PackageLicenseExpression>
+    <PackageLicenseFile>MITLicense.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,6 +21,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\XLSXDataExtractor.Common\XLSXDataExtractor.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\..\Desktop\MITLicense.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
