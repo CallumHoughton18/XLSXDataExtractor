@@ -3,6 +3,7 @@
 An extension library for ClosedXML to allow for quick and easy bulk data extraction from Excel Workbooks into various formats.
 
 **NuGets**
+
 | Name          			   | Link          														   |
 | -------------------------|:---------------------------------------------------------------------:|
 | XLSX_Data_Extractor      | [NuGet Link](https://www.nuget.org/packages/XLSX_Data_Extractor/1.0.0)|
