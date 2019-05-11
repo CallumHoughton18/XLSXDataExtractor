@@ -2,6 +2,8 @@
 
 An extension library for ClosedXML to allow for quick and easy bulk data extraction from Excel Workbooks into various formats.
 
+[![Build Status](https://travis-ci.org/CallumHoughton18/XLSXDataExtractor.svg?branch=master)](https://travis-ci.org/CallumHoughton18/XLSXDataExtractor)
+
 **NuGets**
 
 | Name          			   | Link          														   |
