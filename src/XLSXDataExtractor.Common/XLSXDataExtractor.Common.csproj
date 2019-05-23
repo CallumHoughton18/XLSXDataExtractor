@@ -7,6 +7,8 @@
     <RepositoryUrl>https://github.com/CallumHoughton18/XLSXDataExtractor</RepositoryUrl>
     <PackageProjectUrl>https://github.com/CallumHoughton18/XLSXDataExtractor</PackageProjectUrl>
     <RepositoryType>GitHub</RepositoryType>
+    <Authors>Callum_Houghton</Authors>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

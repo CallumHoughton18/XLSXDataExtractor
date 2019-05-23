@@ -24,6 +24,16 @@ namespace XLSXDataExtractor
             return xlWorkbook.Worksheet(sheetName);
         }
 
+        public static IXLWorksheet ConvertToWorksheet(DataTable extractedDataTable)
+        {
+            if (extractedDataTable == null) throw new ArgumentNullException("extractedDataTable", "Cannot be null");
+
+            string sheetName = "newsheet";
+            var xlWorkbook = new XLWorkbook();
+            xlWorkbook.AddWorksheet(extractedDataTable, sheetName);
+            return xlWorkbook.Worksheet(sheetName);
+        }
+
         public static string ConvertToCSV(IEnumerable<IEnumerable<KeyValuePair<string, object>>> TwoDiColOfExtractedData)
         {
             if (TwoDiColOfExtractedData == null) throw new ArgumentNullException("TwoDiColOfExtractedData", "Cannot be null");
@@ -34,7 +44,15 @@ namespace XLSXDataExtractor
             return csvText;
         }
 
-        private static DataTable GenerateDataTable(IEnumerable<IEnumerable<KeyValuePair<string, object>>> TwoDiColOfExtractedData)
+        public static string ConvertToCSV(DataTable extractedDataTable)
+        {
+            if (extractedDataTable == null) throw new ArgumentNullException("extractedDataTable", "Cannot be null");
+
+            string csvText = extractedDataTable.ToCSVString();
+            return csvText;
+        }
+
+        public static DataTable GenerateDataTable(IEnumerable<IEnumerable<KeyValuePair<string, object>>> TwoDiColOfExtractedData)
         {
             var dataTable = new DataTable();
 

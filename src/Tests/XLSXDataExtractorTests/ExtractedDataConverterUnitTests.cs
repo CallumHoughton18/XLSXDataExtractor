@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,9 +39,35 @@ namespace XLSXDataExtractorTests
         }
 
         [Test]
+        public void ConvertToWorksheetFromDataTableValidTest()
+        {
+            var dataTable = ExtractedDataConverter.GenerateDataTable(XLSXDataExtractorTestHelper.GenTwoDimensionalCollectionOfExtractedData());
+            var worksheet = ExtractedDataConverter.ConvertToWorksheet(dataTable);
+
+            var cellsUsed = worksheet.CellsUsed();
+
+            bool emptyCellsFromDataTable = cellsUsed.Any(x => x.Address.ColumnNumber == 6 && x.Address.RowNumber > 1);
+            Assert.That(emptyCellsFromDataTable, Is.False);
+            foreach (var cell in cellsUsed)
+            {
+                //generated table should be 12 cells by 12 cells start from cell 0,0.
+                Assert.That(cell.Address.RowNumber, Is.LessThan(12));
+                Assert.That(cell.Address.ColumnNumber, Is.LessThan(12));
+            }
+        }
+
+        [Test]
         public void ConvertToWorksheetNullCollectionTest()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => ExtractedDataConverter.ConvertToWorksheet(null));
+            IEnumerable<IEnumerable<KeyValuePair<string, object>>> nullObj = null;
+            var ex = Assert.Throws<ArgumentNullException>(() => ExtractedDataConverter.ConvertToWorksheet(nullObj));
+        }
+
+        [Test]
+        public void ConvertToWorksheetNullDataTablenTest()
+        {
+            DataTable nullObj = null;
+            var ex = Assert.Throws<ArgumentNullException>(() => ExtractedDataConverter.ConvertToWorksheet(nullObj));
         }
 
         [Test]
@@ -61,9 +88,28 @@ namespace XLSXDataExtractorTests
         }
 
         [Test]
+        public void ConvertToCSVFromDataTable()
+        {
+            string expectedCSV = File.ReadAllText(Path.Combine(executingAssemblyPath, "Files", "ExpectedCSV.txt"));
+
+            var dataTable = ExtractedDataConverter.GenerateDataTable(XLSXDataExtractorTestHelper.GenTwoDimensionalCollectionOfExtractedData());         
+            string actualCSV = ExtractedDataConverter.ConvertToCSV(dataTable);
+
+            Assert.That(actualCSV, Is.EqualTo(expectedCSV));
+        }
+
+        [Test]
         public void ConvertToCSVNullCollectionTest()
         {
-            var ex = Assert.Throws<ArgumentNullException>(() => ExtractedDataConverter.ConvertToCSV(null));
+            IEnumerable<IEnumerable<KeyValuePair<string, object>>> nullObj = null;
+            var ex = Assert.Throws<ArgumentNullException>(() => ExtractedDataConverter.ConvertToCSV(nullObj));
+        }
+
+        [Test]
+        public void ConvertToCSVNullDataTableTest()
+        {
+            DataTable nullObj = null;
+            var ex = Assert.Throws<ArgumentNullException>(() => ExtractedDataConverter.ConvertToCSV(nullObj));
         }
 
         [Test]
