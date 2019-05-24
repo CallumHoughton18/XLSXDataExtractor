@@ -39,6 +39,21 @@ namespace XLSXDataExtractorTests
         }
 
         [Test]
+        public void GenerateDataTableValidTest()
+        {
+            var dataTable = ExtractedDataConverter.GenerateDataTable(XLSXDataExtractorTestHelper.GenTwoDimensionalCollectionOfExtractedData());
+
+            Assert.That(dataTable.Columns.Count, Is.EqualTo(10));
+            Assert.That(dataTable.Rows.Count, Is.EqualTo(10));
+
+            for (int i = 0; i < 10; i++)
+            {
+                DataColumn column = dataTable.Columns[i];
+                Assert.That(column.ColumnName, Is.EqualTo("Test" + i));
+            }
+        }
+
+        [Test]
         public void ConvertToWorksheetFromDataTableValidTest()
         {
             var dataTable = ExtractedDataConverter.GenerateDataTable(XLSXDataExtractorTestHelper.GenTwoDimensionalCollectionOfExtractedData());
