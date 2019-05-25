@@ -4,6 +4,8 @@ An extension library for ClosedXML to allow for quick and easy bulk data extract
 
 [![Build Status](https://dev.azure.com/callumhoughton13/callumhoughton13/_apis/build/status/CallumHoughton18.XLSXDataExtractor?branchName=master)](https://dev.azure.com/callumhoughton13/callumhoughton13/_build/latest?definitionId=2&branchName=master)
 
+To see an example of this library is used check out the [XLSXBulkDataExtractor Desktop Application](<https://github.com/CallumHoughton18/XLSXBulkDataExtractor>).
+
 **NuGets**
 
 | Name          			   | Link          														   |
