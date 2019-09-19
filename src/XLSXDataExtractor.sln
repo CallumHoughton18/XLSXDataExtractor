@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8B13F352
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XLSXDataExtractorTests", "Tests\XLSXDataExtractorTests\XLSXDataExtractorTests.csproj", "{E399E565-E4A8-47BF-A63E-104085896D09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XLSXDataExtractor.Common", "XLSXDataExtractor.Common\XLSXDataExtractor.Common.csproj", "{C4C11BE0-CEC0-4627-B4C6-1B6B20977E1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XLSXDataExtractor.Common", "XLSXDataExtractor.Common\XLSXDataExtractor.Common.csproj", "{C4C11BE0-CEC0-4627-B4C6-1B6B20977E1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

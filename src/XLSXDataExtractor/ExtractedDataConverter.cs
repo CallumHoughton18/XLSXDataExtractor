@@ -34,21 +34,58 @@ namespace XLSXDataExtractor
             return xlWorkbook.Worksheet(sheetName);
         }
 
-        public static string ConvertToCSV(IEnumerable<IEnumerable<KeyValuePair<string, object>>> TwoDiColOfExtractedData)
+        /// <summary>
+        /// Converts a given ienumerable of ienumerable of KeyValuePair objects to a CSV string
+        /// </summary>
+        /// <param name="extractedDataTable"></param>
+        /// <param name="escapeValues">If true, csv values are surrounded by quotation marks</param>
+        /// <returns>a csv string</returns>
+        public static string ConvertToCSV(IEnumerable<IEnumerable<KeyValuePair<string, object>>> TwoDiColOfExtractedData, bool escapeValues = true)
+        {
+            return ConvertToDelimitedString(TwoDiColOfExtractedData,",", escapeValues);
+        }
+
+        /// <summary>
+        /// Converts a given datatable to a CSV string
+        /// </summary>
+        /// <param name="extractedDataTable"></param>
+        /// <param name="escapeValues">If true, csv values are surrounded by quotation marks</param>
+        /// <returns>a csv string</returns>
+        public static string ConvertToCSV(DataTable extractedDataTable, bool escapeValues = true)
+        {
+            return ConvertToDelimitedString(extractedDataTable, ",", escapeValues);
+
+        }
+
+        /// <summary>
+        /// Converts a collection of collections of key value pairs to a delimited string using a given delimiter
+        /// </summary>
+        /// <param name="TwoDiColOfExtractedData"></param>
+        /// <param name="delimiter"></param>
+        /// <param name="escapeValues">If true, values are surrounded with quotation marks.</param>
+        /// <returns>a delimited string</returns>
+        public static string ConvertToDelimitedString(IEnumerable<IEnumerable<KeyValuePair<string, object>>> TwoDiColOfExtractedData, string delimiter, bool escapeValues = true)
         {
             if (TwoDiColOfExtractedData == null) throw new ArgumentNullException("TwoDiColOfExtractedData", "Cannot be null");
 
             var genDataTable = GenerateDataTable(TwoDiColOfExtractedData);
 
-            string csvText = genDataTable.ToCSVString();
+            string csvText = genDataTable.ToDelimitedString(escapeValues, delimiter);
             return csvText;
         }
 
-        public static string ConvertToCSV(DataTable extractedDataTable)
+        /// <summary>
+        /// Converts a datatable to a delimited string using a given delimiter
+        /// </summary>
+        /// <param name="TwoDiColOfExtractedData"></param>
+        /// <param name="delimiter"></param>
+        /// <param name="escapeValues">If true, values are surrounded with quotation marks.</param>
+        /// <returns>a delimited string</returns>
+        public static string ConvertToDelimitedString(DataTable extractedDataTable, string delimiter, bool escapeValues = true)
         {
             if (extractedDataTable == null) throw new ArgumentNullException("extractedDataTable", "Cannot be null");
 
-            string csvText = extractedDataTable.ToCSVString();
+            string csvText = extractedDataTable.ToDelimitedString(escapeValues, delimiter);
             return csvText;
         }
 

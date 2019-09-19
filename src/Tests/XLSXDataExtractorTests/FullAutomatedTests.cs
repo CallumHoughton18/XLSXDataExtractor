@@ -53,5 +53,17 @@ namespace XLSXDataExtractorTests
             var generatedCSVText = ExtractedDataConverter.ConvertToCSV(extracted);
             Assert.That(generatedCSVText, Is.EqualTo(File.ReadAllText(Path.Combine(executingAssemblyPath, "Files", "IntegrationTestExpectedCsv.txt"))));
         }
+
+        [Test]
+        public void SheetToDelimitedStringIntegrationTest()
+        {
+            DataExtractor dataExtractor = new DataExtractor(Path.Combine(executingAssemblyPath, "Files", "IntegrationTestExample.xlsx"));
+
+            var extracted = dataExtractor.SheetToDataTable(dataExtractor.RequiredWorkbook.Worksheet(1));
+
+            Assert.That(extracted.Item2.Count(), Is.EqualTo(0));
+            var generatedCSVText = ExtractedDataConverter.ConvertToCSV(extracted.Item1, false);
+            Assert.That(generatedCSVText, Is.EqualTo(File.ReadAllText(Path.Combine(executingAssemblyPath, "Files", "IntegrationTestExpectedSheetToCSV.txt"))));
+        }
     }
 }

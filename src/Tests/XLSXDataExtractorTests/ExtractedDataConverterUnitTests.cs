@@ -95,7 +95,7 @@ namespace XLSXDataExtractorTests
         [Test]
         public void ConvertToCSVValid()
         {
-            string expectedCSV = File.ReadAllText(Path.Combine(executingAssemblyPath,"Files", "ExpectedCSV.txt"));
+            string expectedCSV = File.ReadAllText(Path.Combine(executingAssemblyPath,"Files", "ExpectedCSV-CommaEscaped.txt"));
 
             string actualCSV = ExtractedDataConverter.ConvertToCSV(XLSXDataExtractorTestHelper.GenTwoDimensionalCollectionOfExtractedData());
 
@@ -105,10 +105,21 @@ namespace XLSXDataExtractorTests
         [Test]
         public void ConvertToCSVFromDataTable()
         {
-            string expectedCSV = File.ReadAllText(Path.Combine(executingAssemblyPath, "Files", "ExpectedCSV.txt"));
+            string expectedCSV = File.ReadAllText(Path.Combine(executingAssemblyPath, "Files", "ExpectedCSV-CommaEscaped.txt"));
 
             var dataTable = ExtractedDataConverter.GenerateDataTable(XLSXDataExtractorTestHelper.GenTwoDimensionalCollectionOfExtractedData());         
             string actualCSV = ExtractedDataConverter.ConvertToCSV(dataTable);
+
+            Assert.That(actualCSV, Is.EqualTo(expectedCSV));
+        }
+
+        [Test]
+        public void ConvertToCSVFromDataTable_TabDelimited_NotEscaped()
+        {
+            string expectedCSV = ExpectedStrings.ExpectedCSV_TabDelimited_NotEscaped;
+
+            var dataTable = ExtractedDataConverter.GenerateDataTable(XLSXDataExtractorTestHelper.GenTwoDimensionalCollectionOfExtractedData());
+            string actualCSV = ExtractedDataConverter.ConvertToDelimitedString(dataTable, "\t", false);
 
             Assert.That(actualCSV, Is.EqualTo(expectedCSV));
         }

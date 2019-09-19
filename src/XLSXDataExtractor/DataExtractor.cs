@@ -1,10 +1,12 @@
 ﻿using ClosedXML.Excel;
+using ClosedXML.Excel.CalcEngine;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using XLSXDataExtractor.Common;
 using XLSXDataExtractor.Models;
 
 namespace XLSXDataExtractor
@@ -58,7 +60,7 @@ namespace XLSXDataExtractor
             }
         }
 
-        public KeyValuePair<string,fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(string workSheetName, string extractedDataFieldName, int rowNum, int columnNum)
+        public KeyValuePair<string, fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(string workSheetName, string extractedDataFieldName, int rowNum, int columnNum)
         {
             if (string.IsNullOrWhiteSpace(extractedDataFieldName)) throw new ArgumentException("An extraction request fieldname cannot be null or empty");
 
@@ -75,7 +77,7 @@ namespace XLSXDataExtractor
             return RetrieveDataFromWorkbook<fieldValueType>(workSheetName, extractionRequest.FieldName, extractionRequest.RowNum, extractionRequest.ColNum);
         }
 
-        public KeyValuePair<string,fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(int workSheetNum, string extractedDataFieldName, int rowNum, int columnNum)
+        public KeyValuePair<string, fieldValueType> RetrieveDataFromWorkbook<fieldValueType>(int workSheetNum, string extractedDataFieldName, int rowNum, int columnNum)
         {
             if (string.IsNullOrWhiteSpace(extractedDataFieldName)) throw new ArgumentException("An extraction request fieldname cannot be null or empty");
             if (!Enumerable.Range(1, RequiredWorkbook.Worksheets.Count).Contains(workSheetNum)) throw new ArgumentOutOfRangeException("workSheetNum", $"Not within range of worksheets. Worksheets count: {RequiredWorkbook.Worksheets.Count}");
@@ -101,6 +103,66 @@ namespace XLSXDataExtractor
             bool valueExists = worksheet.Cell(rowNum, columnNum).TryGetValue(out valueType value);
             if (!valueExists) throw new NullReferenceException($"No value in row:{rowNum} col:{columnNum} in {worksheet.Name} of type {value.GetType().Name}");
             return value;
+        }
+
+        public Tuple<DataTable, IEnumerable<ParsingError>> SheetToDataTable(IXLWorksheet worksheet)
+        {
+            if (worksheet == null) throw new ArgumentNullException("worksheet", "cannot be null");
+
+            DataTable dt = new DataTable();
+            List<ParsingError> parsingErrors = new List<ParsingError>();
+
+            bool firstRow = true;
+            foreach (IXLRow row in worksheet.Rows())
+            {
+                // First row used as table column headers
+                if (firstRow)
+                {
+                    foreach (IXLCell cell in row.Cells())
+                    {
+                        dt.Columns.Add(cell.Value.ToString());
+                    }
+                    firstRow = false;
+                }
+                else
+                {
+                    if (!row.IsEmpty())
+                    {
+                        dt.Rows.Add();
+                        int i = 0;
+
+                        var firstCellColumnNum = row.FirstCellUsed();
+                        var lastCellColumnNum = row.LastCellUsed();
+
+                        if (firstCellColumnNum != null && lastCellColumnNum != null)
+                        {
+                            foreach (IXLCell cell in row.Cells(firstCellColumnNum.Address.ColumnNumber, lastCellColumnNum.Address.ColumnNumber))
+                            {
+                                string cellValue = "";
+                                try
+                                {
+                                    if (cell.Value != null) cellValue = cell.Value.ToString();
+                                }
+                                catch(ExpressionParseException e)
+                                {
+                                    parsingErrors.Add(new ParsingError($"Invalid expression at {cell.Address.ToString()} - likely from a mistyped calculation", e));
+                                }
+                                catch (NullReferenceException e)
+                                {
+                                    parsingErrors.Add(new ParsingError($"null reference error at {cell.Address.ToString()} - likely from a mistyped calculation", e));
+
+                                }
+
+                                dt.Rows[dt.Rows.Count - 1][i] = cellValue;
+                                i++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return new Tuple<DataTable, IEnumerable<ParsingError>>(dt, parsingErrors);
+
         }
     }
 }

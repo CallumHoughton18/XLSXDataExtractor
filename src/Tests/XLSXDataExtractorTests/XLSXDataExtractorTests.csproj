@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataExtractorUnitTests.cs" />
+    <Compile Include="ExpectedStrings.cs" />
     <Compile Include="ExtractedDataConverterUnitTests.cs" />
     <Compile Include="FullAutomatedTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,16 +101,26 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\XLSXDataExtractor.Common\XLSXDataExtractor.Common.csproj">
+      <Project>{C4C11BE0-CEC0-4627-B4C6-1B6B20977E1E}</Project>
+      <Name>XLSXDataExtractor.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\XLSXDataExtractor\XLSXDataExtractor.csproj">
       <Project>{BE3D19B9-49E8-4045-AE57-5EAE9DF79012}</Project>
       <Name>XLSXDataExtractor</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Files\ExpectedCSV.txt">
+    <Content Include="Files\ExpectedCSV-CommaNotEscaped.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\ExpectedCSV-CommaEscaped.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Files\IntegrationTestExpectedCsv.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\IntegrationTestExpectedSheetToCSV.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
